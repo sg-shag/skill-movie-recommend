@@ -38,6 +38,28 @@ Just ask naturally:
 - "Что посмотреть сегодня вечером?"
 - "Recommend me something like Левиафан"
 
+---
+
+## 🚧 Roadmap: live data from Kinorium
+
+Currently the skill works only with a manually exported CSV snapshot. There are two paths to make it live:
+
+### Option A — Kinorium Insider API
+
+Kinorium has an internal API documented at `https://en.kinorium.com/insider/api/` — but access appears to be restricted to partners or registered developers. If a public API key becomes available, the skill can be extended to fetch ratings on demand without manual export.
+
+**What's needed:** Kinorium API token + endpoint for user ratings.
+
+### Option B — Public profile scraping
+
+The public profile URL `https://ru.kinorium.com/user/USERID/ratings/` exists but is protected by JS anti-bot challenges (cookie/fingerprint verification). Standard HTTP fetching fails.
+
+**What's needed:** A headless browser solution (Playwright/Puppeteer) or a Kinorium session cookie to bypass the JS challenge and fetch ratings without export.
+
+### Contributions welcome
+
+If you have access to the Kinorium API or a working scraping approach, PRs are welcome.
+
 ## License
 
 MIT

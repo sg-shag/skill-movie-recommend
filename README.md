@@ -1,6 +1,6 @@
 # movie-recommend
 
-An [OpenClaw](https://github.com/openclaw/openclaw) skill that recommends movies, TV shows, and documentaries based on your personal watch history exported from [Kinorium.com](https://ru.kinorium.com).
+A [Hermes Agent](https://hermes-agent.nousresearch.com) skill that recommends movies, TV shows, and documentaries based on your personal watch history exported from [Kinorium.com](https://ru.kinorium.com).
 
 ## How it works
 
@@ -14,29 +14,31 @@ The skill reads your personal ratings from a CSV export (`references/watched.csv
 
 1. Export your data from Kinorium:
    - Go to your Kinorium profile → Settings → **Export data**
-   - Download `backup_USERID_votes.csv`
+   - You will receive an email from `robot@kinorium.com` with CSV attachments
 
-2. Replace the sample file with your export (rename to `watched.csv`, convert from UTF-16 to UTF-8):
-   ```
-   movie-recommend/references/watched.csv
+2. Download the attachments to `~/Downloads/`, then convert and install (files arrive as UTF-16 LE with BOM):
+   ```python
+   import os, glob
+   dest = os.path.expanduser('~/.hermes/skills/movie-recommend/references/')
+   for pattern, dst in [('backup_*_votes.csv', 'watched.csv'), ('backup_*_movie_list.csv', 'watchlist.csv')]:
+       matches = glob.glob(os.path.expanduser(f'~/Downloads/{pattern}'))
+       if matches:
+           text = open(matches[0], 'rb').read().decode('utf-16')
+           open(dest + dst, 'w', encoding='utf-8').write(text)
+           print(f'Written: {dst}')
    ```
 
-3. Package and install the skill in OpenClaw:
+3. Install the skill:
+   ```bash
+   hermes skills install https://github.com/sg-shag/skill-movie-recommend
    ```
-   openclaw skills install ./movie-recommend.skill
-   ```
-
-## Input format
-
-Tab-separated CSV exported from Kinorium. Columns:
-`My rating`, `backup_id`, `Date`, `Title`, `Original Title`, `Type`, `Year`, `Genres`, `Countries`, `Runtime`, `Age limit`, `MPAA`, `Budget`, `Box USA`, `Box world`, `Box RU`, `Audience`, `Knrm rating`, `Knrm cnt`, `IMDb rating`, `IMDb cnt`, `World premier date`, `RU premier date`, `Digital premier date`, `Actors`, `Directors`, `Note`
 
 ## Usage
 
 Just ask naturally:
-- "Посоветуй фильм"
-- "Что посмотреть сегодня вечером?"
-- "Recommend me something like Левиафан"
+- «Посоветуй фильм»
+- «Что посмотреть сегодня вечером?»
+- «Recommend me something like Левиафан»
 
 ---
 

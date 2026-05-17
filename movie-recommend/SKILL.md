@@ -11,8 +11,10 @@ Kinorium has no public API. It sends CSV exports by email on request.
 
 **When user asks to refresh watched/watchlist data:**
 1. Check date: `cat ~/.hermes/skills/movie-recommend/references/kinorium_date.txt`
-2. Find the email via himalaya on your **personal** account (not the agent's): `himalaya envelope list --account YOUR_PERSONAL_ACCOUNT` — look for sender `robot@kinorium.com`, subject "Мои данные в Кинориуме"
-3. Download attachments: `himalaya attachment download <ID> --account YOUR_PERSONAL_ACCOUNT` → saves to `~/Downloads/`
+2. Find the email from `robot@kinorium.com` (subject: "Мои данные в Кинориуме")
+   in your email client and download the attachments to `~/Downloads/`.
+   Example with himalaya: `himalaya envelope list && himalaya attachment download <ID>`
+3. (attachments are now in `~/Downloads/`)
 4. Convert (files are UTF-16 LE with BOM) and install:
 ```python
 import codecs, os, glob
